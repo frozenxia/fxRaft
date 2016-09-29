@@ -17,6 +17,14 @@ import java.util.List;
 public class RaftLogEntity {
 	private List<LogEntry> logs;
 
+	public RaftLogEntity() {
+		logs = new ArrayList<LogEntry>();
+	}
+
+	public RaftLogEntity(List<LogEntry> logs) {
+		this.logs = logs;
+	}
+
 	public int appendLogEntry(LogEntry et) {
 		logs.add(et);
 		return 1;

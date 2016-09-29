@@ -23,6 +23,10 @@ public class RaftServerManager {
 		initializeServer();
 	}
 
+	public final RaftServerEntity getServer() {
+		return server;
+	}
+
 	public void setRaftHandler(RaftPins handler) {
 		this.server.setHandler(handler);
 	}
@@ -103,7 +107,9 @@ public class RaftServerManager {
 		msg.setTerm(server.getCurrentTerm());
 		msg.setLastLogTerm(this.getLastLogTerm());
 		msg.setLastLogIndex(this.getLastLogIndex());
-		server.getHandler().sendRequestVote(node, msg);
+		if (server.getHandler() != null) {
+			server.getHandler().sendRequestVote(node, msg);
+		}
 	}
 
 	public int grandRequestVoteMsg(RaftNodeEntity node, RaftRequestForVoteMsg msg) {
@@ -210,7 +216,9 @@ public class RaftServerManager {
 			msg.setPrevLogIndex(0);
 		}
 		msg.setEntries(this.getLogEntriesFromIndex(node.getNextIndex()));
-		server.getHandler().sendAppendEntriesMsg(node, msg);
+		if (server.getHandler() != null) {
+			server.getHandler().sendAppendEntriesMsg(node, msg);
+		}
 	}
 
 	public RaftAppendEntriesMsgResp raftRecvAppendEntriesMsg(RaftNodeEntity node, RaftAppendEntriesMsg msg) {
@@ -552,5 +560,9 @@ public class RaftServerManager {
 		int iret = -1;
 		iret = server.appendEntry(entry);
 		return iret;
+	}
+
+	public RaftNodeEntity getCurrentLeader() {
+		return server.getLeader();
 	}
 }

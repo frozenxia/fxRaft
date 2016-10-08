@@ -365,7 +365,7 @@ public class RaftServerManager {
 		return 1;
 	}
 
-	public int raftRecvEntry(RaftNodeEntity node, LogEntry entry, RaftEntryMsgResp resp) {
+	public int raftRecvEntry(LogEntry entry, RaftEntryMsgResp resp) {
 		if (entry.isVotingCfgChange()) {
 			if (server.isVotingCfgChange()) {
 				return RaftServerEntity.RAFT_ERROR_ONE_VOTING_CFG_CONLY;

@@ -7,7 +7,10 @@ package com.frozenxia.fxraft.sample;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+import com.frozenxia.fxraft.raft.LogEntry;
+import com.frozenxia.fxraft.raft.RaftEntryMsgResp;
 import com.frozenxia.fxraft.raft.RaftServerManager;
 import com.frozenxia.fxraft.raft.RaftServerState;
 
@@ -45,6 +48,17 @@ public class Entropy {
 			this.setResult(result, -1, "no leader", "");
 			return result;
 		}
+		LogEntry current_entry = manager.getLogEntryByIndex(manager.getCurrentCommitIndex());
+		long current_dt = (Long) current_entry.getData();
+		long next_dt = current_dt + 1;
+
+		LogEntry next_entry = new LogEntry();
+		next_entry.setLogId(new Random().nextInt());
+		next_entry.setData(next_dt);
+		next_entry.setTermId(manager.getCurrentterm());
+		next_entry.setType(LogEntry.RAFT_LOGTYPE_NORMAL);
+		RaftEntryMsgResp resp = new RaftEntryMsgResp();
+		manager.raftRecvEntry(next_entry, resp);
 		return null;
 	}
 }
